@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "mutaconf"
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["AlphaHydrae"]
@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
     "lib/mutaconf/target.rb",
     "mutaconf.gemspec",
     "spec/block_spec.rb",
+    "spec/env_spec.rb",
     "spec/extract_spec.rb",
     "spec/fixtures/eval.rb",
     "spec/helper.rb",

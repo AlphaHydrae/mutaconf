@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 module Mutaconf
-  VERSION = '0.0.5'
+  VERSION = '0.0.6'
 
   def self.dsl *args
     DSL.new *args
