@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["AlphaHydrae"]
-  s.date = "2013-04-12"
+  s.date = "2013-04-14"
   s.description = "Create simple DSLs and read configuration from hashes or objects."
   s.email = "hydrae.alpha@gmail.com"
   s.extra_rdoc_files = [
@@ -28,10 +28,16 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "lib/mutaconf.rb",
-    "lib/mutaconf/config.rb",
     "lib/mutaconf/dsl.rb",
+    "lib/mutaconf/errors.rb",
+    "lib/mutaconf/target.rb",
     "mutaconf.gemspec",
+    "spec/block_spec.rb",
+    "spec/fixtures/eval.rb",
     "spec/helper.rb",
+    "spec/source_spec.rb",
+    "spec/subclass_spec.rb",
+    "spec/target_spec.rb",
     "spec/version_spec.rb"
   ]
   s.homepage = "http://github.com/AlphaHydrae/mutaconf"
