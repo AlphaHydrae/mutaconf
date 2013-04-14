@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 module Mutaconf
-  VERSION = '0.0.6'
+  VERSION = '0.0.7'
 
   def self.dsl *args
     DSL.new *args
@@ -9,7 +9,7 @@ module Mutaconf
 
   def self.env *args
     options = args.last.kind_of?(Hash) ? args.pop : {}
-    args.inject({}) do |memo,key|
+    args.flatten.inject({}) do |memo,key|
       env_key = options[:upcase] == false ? key.to_s : key.to_s.upcase
       prefix = options[:prefix]
       prefix = prefix.upcase if prefix and options[:upcase] != false
