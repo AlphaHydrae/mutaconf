@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "mutaconf"
-  s.version = "0.0.7"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["AlphaHydrae"]
-  s.date = "2013-04-14"
+  s.date = "2013-04-29"
   s.description = "Create simple DSLs and read configuration from hashes or objects."
   s.email = "hydrae.alpha@gmail.com"
   s.extra_rdoc_files = [
@@ -18,7 +18,6 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".rspec",
-    ".ruby-gemset",
     ".ruby-version",
     ".screenrc",
     "Gemfile",
@@ -37,6 +36,7 @@ Gem::Specification.new do |s|
     "spec/extract_spec.rb",
     "spec/fixtures/eval.rb",
     "spec/helper.rb",
+    "spec/proxy_spec.rb",
     "spec/source_spec.rb",
     "spec/subclass_spec.rb",
     "spec/target_spec.rb",
@@ -45,11 +45,11 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/AlphaHydrae/mutaconf"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "2.0.3"
+  s.rubygems_version = "1.8.25"
   s.summary = "Configuration utilities."
 
   if s.respond_to? :specification_version then
-    s.specification_version = 4
+    s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<bundler>, [">= 0"])
