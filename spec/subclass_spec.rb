@@ -16,7 +16,7 @@ describe Mutaconf::DSL do
   end
 
   let(:target){ {} }
-  let(:dsl){ CustomDSL.new target: target }
+  let(:dsl){ CustomDSL.new attrs: { target => true } }
 
   it "should work when subclassed" do
     result = dsl.configure do
@@ -25,7 +25,7 @@ describe Mutaconf::DSL do
       increase 5
     end
     expected = { a: 'b', c: 'd' }
-    result.should be(target)
+    result.should be(dsl)
     target.should == expected
     dsl.value.should == 5
   end

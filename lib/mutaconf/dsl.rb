@@ -2,12 +2,45 @@
 module Mutaconf
 
   class DSL
-    attr_accessor :keys, :target, :lenient
+    attr_accessor :lenient
 
     def initialize options = {}
-      @keys ||= options[:keys] || [] # TODO: spec pre-set keys in parent class
-      @target = Target.new options[:target]
+
+      @attr_targets = {}
+      @proxy_targets = {}
       @lenient = options[:lenient] if options.key?(:lenient)
+
+      if options[:attrs]
+        options[:attrs].each_pair do |target,attrs|
+          if !!attrs == attrs
+            @attr_targets.default = Target.new target
+          else
+            [ attrs ].flatten.each do |attr|
+              if !!attr == attr
+                @attr_targets.default = Target.new target
+              else
+                @attr_targets[attr] = Target.new target
+              end
+            end
+          end
+        end
+      end
+
+      if options[:proxy]
+        options[:proxy].each_pair do |target,attrs|
+          if !!attrs == attrs
+            @proxy_targets.default = target
+          else
+            [ attrs ].flatten.each do |attr|
+              if !!attr == attr
+                @proxy_targets.default = target
+              else
+                @proxy_targets[attr] = target
+              end
+            end
+          end
+        end
+      end
     end
 
     def configure source = nil, options = {}, &block
@@ -22,16 +55,13 @@ module Mutaconf
 
       instance_exec self, &block if block
 
-      @target.object
+      self
     end
 
     private
 
     def configure_from_hash h, options = {}
-      h.each_pair do |k,v|
-        raise KeyError, k unless @keys.empty? or @keys.include?(k.to_sym) or @lenient
-        @target.set k, v if @keys.empty? or @keys.include?(k.to_sym)
-      end
+      h.each_pair{ |attr,value| send attr, value }
     end
 
     def configure_from_file f, options = {}
@@ -41,20 +71,29 @@ module Mutaconf
     end
 
     def configure_from_object o, options = {}
-      @keys.each{ |key| @target.set key, o.send(key.to_sym) if o.respond_to? key.to_sym }
+      @attr_targets.each_pair do |attr,target|
+        send attr, o.send(attr.to_sym) if o.respond_to? attr.to_sym
+      end
+    end
+
+    def has? attr, method
+      @attr_targets.default or @attr_targets.key?(attr) or @proxy_targets.default or @proxy_targets.key?(method)
+    end
+
+    def set attr, value
+
     end
 
     def method_missing name, *args, &block
 
       m = name.to_s.match(/\A(\w+)\=?\Z/)
 
-      # TODO: fail if property is not in @keys
-      key = m[1]
-      if key
-        raise KeyError, key unless @target.has?(key) or @lenient
-        return @target.get key if args.empty?
-        raise KeyError, key unless @keys.empty? or @keys.include?(key.to_sym) or @lenient
-        @target.set key, args.first if @keys.empty? or @keys.include?(key.to_sym)
+      attr, method = m[1].to_sym, m[0].to_sym
+      if attr
+        raise KeyError, attr unless has?(attr, method) or @lenient
+        return @attr_targets[attr].get attr if args.empty?
+        @attr_targets[attr].set attr, args.first if @attr_targets.default or @attr_targets.key?(attr)
+        @proxy_targets[attr].send *(args.unshift method) if @proxy_targets.default or @proxy_targets.key?(attr)
       else
         super
       end

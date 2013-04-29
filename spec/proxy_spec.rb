@@ -1,35 +1,34 @@
 require 'helper'
 
-describe Mutaconf::DSL do
+describe 'DSL proxies' do
 
-  let(:target){ {} }
+  let(:target){ OpenStruct.new }
   let(:dsl){ Mutaconf::DSL.new options }
-  let(:options){ { attrs: { target => true } } }
+  let(:options){ { proxy: { target => true } } }
 
-  it "should configure properties with instance evaluation" do
+  it "should proxy method calls with instance evaluation" do
+    target.should_receive(:a).with('b')
+    target.should_receive(:c=).with('d')
     result = dsl.configure do
       a 'b'
-      c 'd'
+      self.c = 'd'
     end
-    expected = { a: 'b', c: 'd' }
     result.should be(dsl)
-    target.should == expected
   end
 
-  it "should configure properties with a configuration object" do
+  it "should proxy method calls with a configuration object" do
+    target.should_receive(:a=).with('b')
+    target.should_receive(:c=).with('d')
     result = dsl.configure do |config|
-      config.e = 'f'
-      config.g = 'h'
-      config.i = 'j'
+      config.a = 'b'
+      config.c = 'd'
     end
-    expected = { e: 'f', g: 'h', i: 'j' }
     result.should be(dsl)
-    target.should == expected
   end
 
   context "with restricted keys" do
 
-    let(:options){ { attrs: { target => [ :a ] } } }
+    let(:options){ { proxy: { target => [ :a ] } } }
 
     it "should raise a key error for a unknown key with instance evaluation" do
       lambda{ dsl.configure{ b 'c' } }.should raise_error(Mutaconf::KeyError, /'b'/)
@@ -42,30 +41,30 @@ describe Mutaconf::DSL do
 
   context "with restricted keys in lenient mode" do
 
-    let(:options){ { attrs: { target => [ :a, :e ] }, lenient: true } }
+    let(:options){ { proxy: { target => [ :a, :e ] }, lenient: true } }
 
     it "should configure restricted properties with instance evaluation" do
+      target.should_receive(:a).with('b')
+      target.should_receive(:e).with('f')
       result = dsl.configure do
         a 'b'
         c 'd'
         e 'f'
         g 'h'
       end
-      expected = { a: 'b', e: 'f' }
       result.should be(dsl)
-      target.should == expected
     end
 
     it "should configure restricted properties with a configuration object" do
+      target.should_receive(:a=).with('b')
+      target.should_receive(:e=).with('f')
       result = dsl.configure do |config|
         config.a = 'b'
         config.c = 'd'
         config.e = 'f'
         config.g = 'h'
       end
-      expected = { a: 'b', e: 'f' }
       result.should be(dsl)
-      target.should == expected
     end
   end
 end
