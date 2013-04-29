@@ -5,13 +5,16 @@ describe 'DSL proxies' do
   let(:target){ OpenStruct.new }
   let(:dsl){ Mutaconf::DSL.new options }
   let(:options){ { proxy: { target => true } } }
+  let(:block){ lambda{} }
 
   it "should proxy method calls with instance evaluation" do
     target.should_receive(:a).with('b')
     target.should_receive(:c=).with('d')
+    target.should_receive(:e).with('f', &block)
     result = dsl.configure do
       a 'b'
       self.c = 'd'
+      e 'f', &block
     end
     result.should be(dsl)
   end
@@ -44,10 +47,10 @@ describe 'DSL proxies' do
     let(:options){ { proxy: { target => [ :a, :e ] }, lenient: true } }
 
     it "should configure restricted properties with instance evaluation" do
-      target.should_receive(:a).with('b')
+      target.should_receive(:a).with('b', &block)
       target.should_receive(:e).with('f')
       result = dsl.configure do
-        a 'b'
+        a 'b', &block
         c 'd'
         e 'f'
         g 'h'

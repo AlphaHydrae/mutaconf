@@ -91,9 +91,11 @@ module Mutaconf
       attr, method = m[1].to_sym, m[0].to_sym
       if attr
         raise KeyError, attr unless has?(attr, method) or @lenient
-        return @attr_targets[attr].get attr if args.empty?
-        @attr_targets[attr].set attr, args.first if @attr_targets.default or @attr_targets.key?(attr)
-        @proxy_targets[attr].send *(args.unshift method) if @proxy_targets.default or @proxy_targets.key?(attr)
+        if @attr_targets.default or @attr_targets.key?(attr)
+          return @attr_targets[attr].get attr if args.empty?
+          @attr_targets[attr].set attr, args.first 
+        end
+        @proxy_targets[attr].send *(args.unshift method), &block if @proxy_targets.default or @proxy_targets.key?(attr)
       else
         super
       end
