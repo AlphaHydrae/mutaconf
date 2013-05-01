@@ -9,6 +9,12 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 
+RSpec.configure do |config|
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
+end
+
 require 'simplecov'
 SimpleCov.start
 

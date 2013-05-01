@@ -3,10 +3,6 @@
 module Mutaconf
   VERSION = '0.1.1'
 
-  def self.dsl *args
-    DSL.new *args
-  end
-
   def self.env *args
     options = args.last.kind_of?(Hash) ? args.pop : {}
     args.flatten.inject({}) do |memo,key|
@@ -18,15 +14,14 @@ module Mutaconf
     end
   end
 
-  def self.extract source, key
+  def self.extract source, key, options = {}
+    key = key.to_sym if !options.key?(:symbolize) or options[:symbolize]
     if source.kind_of? Hash
-      source[key.to_sym]
-    elsif source.kind_of? OpenStruct
-      source.send key.to_sym
+      source[key]
     elsif source.kind_of?(String) or source.kind_of?(Symbol)
       source
     elsif source
-      source.send key.to_sym
+      source.send key
     end
   end
 end
