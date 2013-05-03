@@ -52,7 +52,6 @@ module Mutaconf
 
       options = args.last.kind_of?(Hash) ? args.pop : {}
 
-      # TODO: support no format
       format = selected_format options
       all = options[:all]
 
@@ -104,13 +103,13 @@ module Mutaconf
     end
 
     def self.selected_format options = {}
-      options[:format] || DEFAULT_FORMAT
+      options.key?(:format) ? options[:format] : DEFAULT_FORMAT
     end
 
     def self.build_suffixes format, type, options = {}
 
       suffixes = type[:suffix]
-      if suffixes == :format
+      if suffixes == :format and FORMATS[format]
         exts = FORMATS[format][:extension]
         exts = [ exts ] unless exts.kind_of? Array
         suffixes = exts.collect{ |ext| ".#{ext}" }

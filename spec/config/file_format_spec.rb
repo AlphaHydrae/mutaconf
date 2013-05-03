@@ -3,7 +3,7 @@ require 'helper'
 describe 'file format' do
   include FakeFS::SpecHelpers
 
-  let(:all_files){ [ '/cwd/.foo.rb', '~/.foo.yml', '/etc/foo.json' ] }
+  let(:all_files){ [ '/cwd/.foo.rb', '/cwd/.foo.yml', '/cwd/.foo.json', '/etc/foo' ] }
 
   let(:find_args){ [ 'foo' ] }
   let(:find_options){ {} }
@@ -27,12 +27,17 @@ describe 'file format' do
 
     context "with format :yaml" do
       let(:find_options){ super().merge format: :yaml }
-      it{ should eq(File.expand_path('~/.foo.yml')) }
+      it{ should eq(File.expand_path('/cwd/.foo.yml')) }
     end
 
     context "with format :json" do
       let(:find_options){ super().merge format: :json }
-      it{ should eq('/etc/foo.json') }
+      it{ should eq('/cwd/.foo.json') }
+    end
+
+    context "with format false" do
+      let(:find_options){ super().merge format: false }
+      it{ should eq('/etc/foo') }
     end
   end
 end
