@@ -21,30 +21,6 @@ module Mutaconf
   def self.config_file *args, &block
     Config.find_file *args, &block
   end
-
-  def self.options *args
-
-    source = args.shift
-    options = args.last.kind_of?(Hash) ? args.pop : {}
-
-    source = if source.kind_of? Hash
-      source
-    elsif source.kind_of? Array
-      source.last.kind_of?(Hash) ? source.pop : {}
-    else
-      {}
-    end
-
-    args.inject({}) do |memo,k|
-
-      if source.key? k
-        memo[k] = source[k]
-        source.delete k if options[:delete]
-      end
-
-      memo
-    end
-  end
 end
 
 Dir[File.join File.dirname(__FILE__), File.basename(__FILE__, '.*'), '*.rb'].each{ |lib| require lib }

@@ -25,7 +25,7 @@ module Mutaconf
     def self.find *args
 
       file_options = args.last.kind_of?(Hash) ? args.pop : {}
-      options = Mutaconf.options file_options, :read, :load, :parser, delete: true
+      options = [ :read, :load, :parser ].inject({}){ |memo,o| memo[o] = file_options.delete o; memo }
       file_options.delete :all
 
       parser = if options[:parser]
