@@ -14,6 +14,38 @@ module Mutaconf
     end
   end
 
+  def self.config *args, &block
+    Config.find *args, &block
+  end
+
+  def self.config_file *args, &block
+    Config.find_file *args, &block
+  end
+
+  def self.options *args
+
+    source = args.shift
+    options = args.last.kind_of?(Hash) ? args.pop : {}
+
+    source = if source.kind_of? Hash
+      source
+    elsif source.kind_of? Array
+      source.last.kind_of?(Hash) ? source.pop : {}
+    else
+      {}
+    end
+
+    args.inject({}) do |memo,k|
+
+      if source.key? k
+        memo[k] = source[k]
+        source.delete k if options[:delete]
+      end
+
+      memo
+    end
+  end
+
   def self.extract source, key, options = {}
     key = key.to_sym if !options.key?(:symbolize) or options[:symbolize]
     if source.kind_of? Hash

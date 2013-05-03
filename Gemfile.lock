@@ -1,8 +1,9 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    diff-lcs (1.2.3)
-    gem-release (0.5.3)
+    diff-lcs (1.2.4)
+    fakefs (0.4.2)
+    gem-release (0.5.5)
     gemcutter (0.7.1)
     git (1.2.5)
     jeweler (1.8.4)
@@ -35,9 +36,11 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
+  fakefs
   gem-release
   gemcutter
   jeweler
+  multi_json (~> 1.7)
   rake
   rake-version
   rspec

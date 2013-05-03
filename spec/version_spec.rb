@@ -1,9 +1,6 @@
 require 'helper'
 
 describe "Version" do
-
-  it "should be correct" do
-    version_file = File.join File.dirname(__FILE__), '..', 'VERSION'
-    expect(Mutaconf::VERSION).to eq(File.open(version_file, 'r').read)
-  end
+  subject{ Mutaconf::VERSION }
+  it{ should eq(File.read(File.join(File.dirname(__FILE__), '..', 'VERSION'))) }
 end
