@@ -25,15 +25,15 @@ module Mutaconf
     def self.find *args
 
       file_options = args.last.kind_of?(Hash) ? args.pop : {}
-      options = [ :read, :load, :parser ].inject({}){ |memo,o| memo[o] = file_options.delete o; memo }
+      options = [ :read, :load, :parser, :parser_options ].inject({}){ |memo,o| memo[o] = file_options.delete o; memo }
       file_options.delete :all
 
       parser = if options[:parser]
         options[:parser]
       elsif file_options[:format] == :yaml
-        YamlParser.new
+        YamlParser.new options[:parser_options]
       elsif file_options[:format] == :json
-        JsonParser.new
+        JsonParser.new options[:parser_options]
       end
 
       file = find_file *(args.push file_options)
@@ -84,15 +84,22 @@ module Mutaconf
 
     class YamlParser
 
-      def parse raw, options = {}
+      def initialize options = {}
+      end
+
+      def parse raw
         YAML.load raw
       end
     end
 
     class JsonParser
 
-      def parse raw, options = {}
-        MultiJson.load raw, options
+      def initialize options = {}
+        @options = options
+      end
+
+      def parse raw
+        MultiJson.load raw, @options
       end
     end
 
