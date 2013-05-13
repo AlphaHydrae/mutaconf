@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 module Mutaconf
-  VERSION = '0.1.1'
+  VERSION = '0.2.0'
 
   def self.env *args
     options = args.last.kind_of?(Hash) ? args.pop : {}

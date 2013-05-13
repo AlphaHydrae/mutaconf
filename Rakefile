@@ -21,6 +21,7 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{Create simple DSLs and read configuration from hashes or objects.}
   gem.email = "hydrae.alpha@gmail.com"
   gem.authors = ["AlphaHydrae"]
+  gem.files = %x[git ls-files -- lib].split("\n") + %w(Gemfile LICENSE.txt README.md VERSION)
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
